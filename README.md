@@ -27,9 +27,9 @@ This module is a port of the
 [Perl 5's Mojo::DOM](https://metacpan.org/pod/Mojo::DOM) that is part of the
 [Mojolicious distribution](https://metacpan.org/release/Mojolicious).
 As [agreed prior](http://irclog.perlgeek.de/mojo/2015-12-14#i_11714260), should
-the Mojolicious core development team decide to make a full port of Mojolicious
-to Perl 6, the decisions made by them regarding this module will be honored
-by the author of this module.
+the Mojolicious core development team decide to port Mojolicious to Perl 6, the
+decisions made by them regarding this module will be honored by the author of
+this module.
 
 Porting by Zoffix Znet (http://zoffix.com/)
 
