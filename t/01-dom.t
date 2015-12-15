@@ -802,21 +802,21 @@ is $dom.content, '<a>xxx<x>x</x>xxx</a>', 'right result';
 $dom = DOM::Parser.new(
   '<div id="a">A</div><div id="b">B</div><div id="c">C</div><p>D</p>');
 @div = $dom.find('p, div')».text;
-is-deeply @div, [qw(A B C D)], 'found all elements';
+is-deeply @div, [<A B C D>], 'found all elements';
 @div = $dom.find('#a, #c')».text;
-is-deeply @div, [qw(A C)], 'found all div elements with the right ids';
+is-deeply @div, [<A C>], 'found all div elements with the right ids';
 @div = $dom.find('div#a, div#b')».text;
-is-deeply @div, [qw(A B)], 'found all div elements with the right ids';
+is-deeply @div, [<A B>], 'found all div elements with the right ids';
 @div = $dom.find('div[id="a"], div[id="c"]')».text;
-is-deeply @div, [qw(A C)], 'found all div elements with the right ids';
+is-deeply @div, [<A C>], 'found all div elements with the right ids';
 $dom = DOM::Parser.new(
   '<div id="☃">A</div><div id="b">B</div><div id="♥x">C</div>');
 @div = $dom.find('#☃, #♥x')».text;
-is-deeply @div, [qw(A C)], 'found all div elements with the right ids';
+is-deeply @div, [<A C>], 'found all div elements with the right ids';
 @div = $dom.find('div#☃, div#b')».text;
-is-deeply @div, [qw(A B)], 'found all div elements with the right ids';
+is-deeply @div, [<A B>], 'found all div elements with the right ids';
 @div = $dom.find('div[id="☃"], div[id="♥x"]')».text;
-is-deeply @div, [qw(A C)], 'found all div elements with the right ids';
+is-deeply @div, [<A C>], 'found all div elements with the right ids';
 
 # Multiple attributes
 $dom = DOM::Parser.new(qq:to/END/);
@@ -825,9 +825,9 @@ $dom = DOM::Parser.new(qq:to/END/);
 <div foo="bar" bar="baz">C</div>
 <div foo="baz" bar="baz">D</div>
 END
-is-deeply $dom.find('div[foo="bar"][bar="baz"]')».text, [qw(A C)],
+is-deeply $dom.find('div[foo="bar"][bar="baz"]')».text, [<A C>],
     'found all div elements with the right atributes';
-is-deeply $dom.find('div[foo^="b"][foo$="r"]')».text, [qw(A B C)],
+is-deeply $dom.find('div[foo^="b"][foo$="r"]')».text, [<A B C>],
     'found all div elements with the right atributes';
 is $dom.at('[foo="bar"]').previous, Nil, 'no previous sibling';
 is $dom.at('[foo="bar"]').next.text, 'B', 'right text';
@@ -898,11 +898,11 @@ $dom = DOM::Parser.new(qq:to/END/);
     <li>H</li>
 </ul>
 END
-is-deeply $dom.find('li:nth-child(odd)')».text, [qw(A C E G)],
+is-deeply $dom.find('li:nth-child(odd)')».text, [<A C E G>],
     'found all odd li elements';
-is-deeply $dom.find('li:NTH-CHILD(ODD)')».text, [qw(A C E G)],
+is-deeply $dom.find('li:NTH-CHILD(ODD)')».text, [<A C E G>],
     'found all odd li elements';
-is-deeply $dom.find('li:nth-last-child(odd)')».text, [qw(B D F H)],
+is-deeply $dom.find('li:nth-last-child(odd)')».text, [<B D F H>],
     'found all odd li elements';
 is $dom.find(':nth-child(odd)')[0].tag,      'ul', 'right tag';
 is $dom.find(':nth-child(odd)')[1].text,     'A',  'right text';
@@ -912,85 +912,85 @@ is $dom.find(':nth-last-child(odd)')[0].tag, 'ul', 'right tag';
 is $dom.find(':nth-last-child(odd)').tail[0].text, 'H', 'right text';
 is $dom.find(':nth-last-child(1)')[0].tag,  'ul', 'right tag';
 is $dom.find(':nth-last-child(1)')[1].text, 'H',  'right text';
-is-deeply $dom.find('li:nth-child(2n+1)')».text, [qw(A C E G)],
+is-deeply $dom.find('li:nth-child(2n+1)')».text, [<A C E G>],
     'found all odd li elements';
-is-deeply $dom.find('li:nth-child(2n + 1)')».text, [qw(A C E G)],
+is-deeply $dom.find('li:nth-child(2n + 1)')».text, [<A C E G>],
     'found all odd li elements';
-is-deeply $dom.find('li:nth-last-child(2n+1)')».text, [qw(B D F H)],
+is-deeply $dom.find('li:nth-last-child(2n+1)')».text, [<B D F H>],
     'found all odd li elements';
-is-deeply $dom.find('li:nth-child(even)')».text, [qw(B D F H)],
+is-deeply $dom.find('li:nth-child(even)')».text, [<B D F H>],
     'found all even li elements';
-is-deeply $dom.find('li:NTH-CHILD(EVEN)')».text, [qw(B D F H)],
+is-deeply $dom.find('li:NTH-CHILD(EVEN)')».text, [<B D F H>],
     'found all even li elements';
-is-deeply $dom.find('li:nth-last-child( even )')».text, [qw(A C E G)],
+is-deeply $dom.find('li:nth-last-child( even )')».text, [<A C E G>],
     'found all even li elements';
-is-deeply $dom.find('li:nth-child(2n+2)')».text, [qw(B D F H)],
+is-deeply $dom.find('li:nth-child(2n+2)')».text, [<B D F H>],
     'found all even li elements';
-is-deeply $dom.find('li:nTh-chILd(2N+2)')».text, [qw(B D F H)],
+is-deeply $dom.find('li:nTh-chILd(2N+2)')».text, [<B D F H>],
     'found all even li elements';
-is-deeply $dom.find('li:nth-child( 2n + 2 )')».text, [qw(B D F H)],
+is-deeply $dom.find('li:nth-child( 2n + 2 )')».text, [<B D F H>],
     'found all even li elements';
-is-deeply $dom.find('li:nth-last-child(2n+2)')».text, [qw(A C E G)],
+is-deeply $dom.find('li:nth-last-child(2n+2)')».text, [<A C E G>],
     'found all even li elements';
-is-deeply $dom.find('li:nth-child(4n+1)')».text, [qw(A E)],
+is-deeply $dom.find('li:nth-child(4n+1)')».text, [<A E>],
     'found the right li elements';
-is-deeply $dom.find('li:nth-last-child(4n+1)')».text, [qw(D H)],
+is-deeply $dom.find('li:nth-last-child(4n+1)')».text, [<D H>],
     'found the right li elements';
-is-deeply $dom.find('li:nth-child(4n+4)')».text, [qw(D H)],
+is-deeply $dom.find('li:nth-child(4n+4)')».text, [<D H>],
     'found the right li elements';
-is-deeply $dom.find('li:nth-last-child(4n+4)')».text, [qw(A E)],
+is-deeply $dom.find('li:nth-last-child(4n+4)')».text, [<A E>],
     'found the right li elements';
-is-deeply $dom.find('li:nth-child(4n)')».text, [qw(D H)],
+is-deeply $dom.find('li:nth-child(4n)')».text, [<D H>],
     'found the right li elements';
-is-deeply $dom.find('li:nth-child( 4n )')».text, [qw(D H)],
+is-deeply $dom.find('li:nth-child( 4n )')».text, [<D H>],
     'found the right li elements';
-is-deeply $dom.find('li:nth-last-child(4n)')».text, [qw(A E)],
+is-deeply $dom.find('li:nth-last-child(4n)')».text, [<A E>],
     'found the right li elements';
-is-deeply $dom.find('li:nth-child(5n-2)')».text, [qw(C H)],
+is-deeply $dom.find('li:nth-child(5n-2)')».text, [<C H>],
     'found the right li elements';
-is-deeply $dom.find('li:nth-child( 5n - 2 )')».text, [qw(C H)],
+is-deeply $dom.find('li:nth-child( 5n - 2 )')».text, [<C H>],
     'found the right li elements';
-is-deeply $dom.find('li:nth-last-child(5n-2)')».text, [qw(A F)],
+is-deeply $dom.find('li:nth-last-child(5n-2)')».text, [<A F>],
     'found the right li elements';
-is-deeply $dom.find('li:nth-child(-n+3)')».text, [qw(A B C)],
+is-deeply $dom.find('li:nth-child(-n+3)')».text, [<A B C>],
     'found first three li elements';
-is-deeply $dom.find('li:nth-child( -n + 3 )')».text, [qw(A B C)],
+is-deeply $dom.find('li:nth-child( -n + 3 )')».text, [<A B C>],
     'found first three li elements';
-is-deeply $dom.find('li:nth-last-child(-n+3)')».text, [qw(F G H)],
+is-deeply $dom.find('li:nth-last-child(-n+3)')».text, [<F G H>],
     'found last three li elements';
-is-deeply $dom.find('li:nth-child(-1n+3)')».text, [qw(A B C)],
+is-deeply $dom.find('li:nth-child(-1n+3)')».text, [<A B C>],
     'found first three li elements';
-is-deeply $dom.find('li:nth-last-child(-1n+3)')».text, [qw(F G H)],
+is-deeply $dom.find('li:nth-last-child(-1n+3)')».text, [<F G H>],
     'found first three li elements';
-is-deeply $dom.find('li:nth-child(3n)')».text, [qw(C F)],
+is-deeply $dom.find('li:nth-child(3n)')».text, [<C F>],
     'found every third li elements';
-is-deeply $dom.find('li:nth-last-child(3n)')».text, [qw(C F)],
+is-deeply $dom.find('li:nth-last-child(3n)')».text, [<C F>],
     'found every third li elements';
-is-deeply $dom.find('li:NTH-LAST-CHILD(3N)')».text, [qw(C F)],
+is-deeply $dom.find('li:NTH-LAST-CHILD(3N)')».text, [<C F>],
     'found every third li elements';
-is-deeply $dom.find('li:Nth-Last-Child(3N)')».text, [qw(C F)],
+is-deeply $dom.find('li:Nth-Last-Child(3N)')».text, [<C F>],
     'found every third li elements';
 is-deeply $dom.find('li:nth-child( 3 )')».text, ['C'],
     'found third li element';
 is-deeply $dom.find('li:nth-last-child( +3 )')».text, ['F'],
     'found third last li element';
-is-deeply $dom.find('li:nth-child(1n+0)')».text, [qw(A B C D E F G)],
+is-deeply $dom.find('li:nth-child(1n+0)')».text, [<A B C D E F G>],
     'found all li elements';
-is-deeply $dom.find('li:nth-child(1n-0)')».text, [qw(A B C D E F G)],
+is-deeply $dom.find('li:nth-child(1n-0)')».text, [<A B C D E F G>],
     'found all li elements';
-is-deeply $dom.find('li:nth-child(n+0)')».text, [qw(A B C D E F G)],
+is-deeply $dom.find('li:nth-child(n+0)')».text, [<A B C D E F G>],
     'found all li elements';
-is-deeply $dom.find('li:nth-child(n)')».text, [qw(A B C D E F G)],
+is-deeply $dom.find('li:nth-child(n)')».text, [<A B C D E F G>],
     'found all li elements';
-is-deeply $dom.find('li:nth-child(n+0)')».text, [qw(A B C D E F G)],
+is-deeply $dom.find('li:nth-child(n+0)')».text, [<A B C D E F G>],
     'found all li elements';
-is-deeply $dom.find('li:NTH-CHILD(N+0)')».text, [qw(A B C D E F G)],
+is-deeply $dom.find('li:NTH-CHILD(N+0)')».text, [<A B C D E F G>],
     'found all li elements';
-is-deeply $dom.find('li:Nth-Child(N+0)')».text, [qw(A B C D E F G)],
+is-deeply $dom.find('li:Nth-Child(N+0)')».text, [<A B C D E F G>],
     'found all li elements';
-is-deeply $dom.find('li:nth-child(n)')».text, [qw(A B C D E F G)],
+is-deeply $dom.find('li:nth-child(n)')».text, [<A B C D E F G>],
     'found all li elements';
-is-deeply $dom.find('li:nth-child(0n+1)')».text, [qw(A)],
+is-deeply $dom.find('li:nth-child(0n+1)')».text, [<A>],
     'found first li element';
 is $dom.find('li:nth-child(0n+0)').elems,     0, 'no results';
 is $dom.find('li:nth-child(0)').elems,        0, 'no results';
@@ -1020,15 +1020,15 @@ $dom = DOM::Parser.new(qq:to/END/);
     <a href="http://mojolicio.us">Mojolicious!</a>
 </div>
 END
-is-deeply $dom.find('ul :nth-child(odd)')».text, [qw(A C E G I)],
+is-deeply $dom.find('ul :nth-child(odd)')».text, [<A C E G I>],
     'found all odd elements';
-is-deeply $dom.find('li:nth-of-type(odd)')».text, [qw(A E H)],
+is-deeply $dom.find('li:nth-of-type(odd)')».text, [<A E H>],
     'found all odd li elements';
-is-deeply $dom.find('li:nth-last-of-type( odd )')».text, [qw(C F I)],
+is-deeply $dom.find('li:nth-last-of-type( odd )')».text, [<C F I>],
     'found all odd li elements';
-is-deeply $dom.find('p:nth-of-type(odd)')».text, [qw(B G)],
+is-deeply $dom.find('p:nth-of-type(odd)')».text, [<B G>],
     'found all odd p elements';
-is-deeply $dom.find('p:nth-last-of-type(odd)')».text, [qw(B G)],
+is-deeply $dom.find('p:nth-last-of-type(odd)')».text, [<B G>],
     'found all odd li elements';
 is-deeply $dom.find('ul :nth-child(1)')».text, ['A'], 'found first child';
 is-deeply $dom.find('ul :first-child')».text, ['A'], 'found first child';
@@ -1049,18 +1049,18 @@ is-deeply $dom.find('ul :nth-child(-n+3):not(li)')».text, ['B'],
     'found first p element';
 is-deeply $dom.find('ul :nth-child(-n+3):NOT(li)')».text, ['B'],
     'found first p element';
-is-deeply $dom.find('ul :nth-child(-n+3):not(:first-child)')».text, [qw(B C)],
+is-deeply $dom.find('ul :nth-child(-n+3):not(:first-child)')».text, [<B C>],
     'found second and third element';
-is-deeply $dom.find('ul :nth-child(-n+3):not(.♥)')».text, [qw(A B)],
+is-deeply $dom.find('ul :nth-child(-n+3):not(.♥)')».text, [<A B>],
     'found first and second element';
-is-deeply $dom.find('ul :nth-child(-n+3):not([class$="♥"])')».text, [qw(A B)],
+is-deeply $dom.find('ul :nth-child(-n+3):not([class$="♥"])')».text, [<A B>],
     'found first and second element';
-is-deeply $dom.find('ul :nth-child(-n+3):not(li[class$="♥"])')».text, [qw(A B)],
+is-deeply $dom.find('ul :nth-child(-n+3):not(li[class$="♥"])')».text, [<A B>],
     'found first and second element';
 is-deeply $dom.find(
-    'ul :nth-child(-n+3):not([class$="♥"][class^="test"])')».text, [qw(A B)],
+    'ul :nth-child(-n+3):not([class$="♥"][class^="test"])')».text, [<A B>],
     'found first and second element';
-is-deeply $dom.find('ul :nth-child(-n+3):not(*[class$="♥"])')».text, [qw(A B)],
+is-deeply $dom.find('ul :nth-child(-n+3):not(*[class$="♥"])')».text, [<A B>],
     'found first and second element';
 is-deeply $dom.find('ul :nth-child(-n+3):not(:nth-child(-n+2))')».text, ['C'],
     'found third element';
@@ -1068,9 +1068,9 @@ is-deeply $dom.find(
     'ul :nth-child(-n+3):not(:nth-child(1)):not(:nth-child(2))')».text, ['C'],
     'found third element';
 is-deeply $dom.find(':only-child')».text, ['J'], 'found only child';
-is-deeply $dom.find('div :only-of-type')».text, [qw(J K)], 'found only child';
+is-deeply $dom.find('div :only-of-type')».text, [<J K>], 'found only child';
 is-deeply $dom.find('div:only-child')».text, ['J'], 'found only child';
-is-deeply $dom.find('div div:only-of-type')».text, [qw(J K)],
+is-deeply $dom.find('div div:only-of-type')».text, [<J K>],
     'found only child';
 
 # Sibling combinator
@@ -1911,11 +1911,11 @@ $dom.parse(qq:to/END/);
 END
 my @results;
 @results.append: .find('a')».text for $dom.find('b');
-is-deeply @results, [qw(bar baz yada)], 'right results';
-is-deeply $dom.find('a')».text, [qw(foo bar baz yada)], 'right results';
+is-deeply @results, [<bar baz yada>], 'right results';
+is-deeply $dom.find('a')».text, [<foo bar baz yada>], 'right results';
 @results = ();
 @results.append: .find('c a')».text for $dom.find('b');
-is-deeply @results, [qw(baz yada)], 'right results';
+is-deeply @results, [<baz yada>], 'right results';
 is $dom.at('b').at('a').text, 'bar', 'right text';
 is $dom.at('c > b > a').text, 'bar', 'right text';
 is $dom.at('b').at('c > b > a'), Nil, 'no result';
@@ -1944,7 +1944,7 @@ is $dom.find('a B c')[1]<ID>, 'four', 'right attribute';
 is-deeply $dom.find('a B c')[1].keys.sort, ['ID'], 'right attributes';
 is $dom.find('a B c')[2], Nil, 'no result';
 is $dom.find('a B c').elems, 2, 'right number of elements';
-is-deeply $dom.find('a B c')».text, [qw(bar baz)], 'right results';
+is-deeply $dom.find('a B c')».text, [<bar baz>], 'right results';
 is $dom.find('a B c').join("\n"),
   qq{<c id="three">bar</c>\n<c ID="four">baz</c>}, 'right result';
 is-deeply $dom.keys, [], 'root has no attributes';
