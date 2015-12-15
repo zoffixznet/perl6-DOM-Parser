@@ -1020,106 +1020,58 @@ $dom = DOM::Parser.new(qq:to/END/);
     <a href="http://mojolicio.us">Mojolicious!</a>
 </div>
 END
-my @e;
-$dom.find('ul :nth-child(odd)').each(sub { push @e, shift.text });
-is-deeply \@e, [qw(A C E G I)], 'found all odd elements';
-@e = ();
-$dom.find('li:nth-of-type(odd)').each(sub { push @e, shift.text });
-is-deeply \@e, [qw(A E H)], 'found all odd li elements';
-@e = ();
-$dom.find('li:nth-last-of-type( odd )').each(sub { push @e, shift.text });
-is-deeply \@e, [qw(C F I)], 'found all odd li elements';
-@e = ();
-$dom.find('p:nth-of-type(odd)').each(sub { push @e, shift.text });
-is-deeply \@e, [qw(B G)], 'found all odd p elements';
-@e = ();
-$dom.find('p:nth-last-of-type(odd)').each(sub { push @e, shift.text });
-is-deeply \@e, [qw(B G)], 'found all odd li elements';
-@e = ();
-$dom.find('ul :nth-child(1)').each(sub { push @e, shift.text });
-is-deeply \@e, ['A'], 'found first child';
-@e = ();
-$dom.find('ul :first-child').each(sub { push @e, shift.text });
-is-deeply \@e, ['A'], 'found first child';
-@e = ();
-$dom.find('p:nth-of-type(1)').each(sub { push @e, shift.text });
-is-deeply \@e, ['B'], 'found first child';
-@e = ();
-$dom.find('p:first-of-type').each(sub { push @e, shift.text });
-is-deeply \@e, ['B'], 'found first child';
-@e = ();
-$dom.find('li:nth-of-type(1)').each(sub { push @e, shift.text });
-is-deeply \@e, ['A'], 'found first child';
-@e = ();
-$dom.find('li:first-of-type').each(sub { push @e, shift.text });
-is-deeply \@e, ['A'], 'found first child';
-@e = ();
-$dom.find('ul :nth-last-child(-n+1)').each(sub { push @e, shift.text });
-is-deeply \@e, ['I'], 'found last child';
-@e = ();
-$dom.find('ul :last-child').each(sub { push @e, shift.text });
-is-deeply \@e, ['I'], 'found last child';
-@e = ();
-$dom.find('p:nth-last-of-type(-n+1)').each(sub { push @e, shift.text });
-is-deeply \@e, ['G'], 'found last child';
-@e = ();
-$dom.find('p:last-of-type').each(sub { push @e, shift.text });
-is-deeply \@e, ['G'], 'found last child';
-@e = ();
-$dom.find('li:nth-last-of-type(-n+1)').each(sub { push @e, shift.text });
-is-deeply \@e, ['I'], 'found last child';
-@e = ();
-$dom.find('li:last-of-type').each(sub { push @e, shift.text });
-is-deeply \@e, ['I'], 'found last child';
-@e = ();
-$dom.find('ul :nth-child(-n+3):not(li)').each(sub { push @e, shift.text });
-is-deeply \@e, ['B'], 'found first p element';
-@e = ();
-$dom.find('ul :nth-child(-n+3):NOT(li)').each(sub { push @e, shift.text });
-is-deeply \@e, ['B'], 'found first p element';
-@e = ();
-$dom.find('ul :nth-child(-n+3):not(:first-child)')
-  .each(sub { push @e, shift.text });
-is-deeply \@e, [qw(B C)], 'found second and third element';
-@e = ();
-$dom.find('ul :nth-child(-n+3):not(.♥)').each(sub { push @e, shift.text });
-is-deeply \@e, [qw(A B)], 'found first and second element';
-@e = ();
-$dom.find('ul :nth-child(-n+3):not([class$="♥"])')
-  .each(sub { push @e, shift.text });
-is-deeply \@e, [qw(A B)], 'found first and second element';
-@e = ();
-$dom.find('ul :nth-child(-n+3):not(li[class$="♥"])')
-  .each(sub { push @e, shift.text });
-is-deeply \@e, [qw(A B)], 'found first and second element';
-@e = ();
-$dom.find('ul :nth-child(-n+3):not([class$="♥"][class^="test"])')
-  .each(sub { push @e, shift.text });
-is-deeply \@e, [qw(A B)], 'found first and second element';
-@e = ();
-$dom.find('ul :nth-child(-n+3):not(*[class$="♥"])')
-  .each(sub { push @e, shift.text });
-is-deeply \@e, [qw(A B)], 'found first and second element';
-@e = ();
-$dom.find('ul :nth-child(-n+3):not(:nth-child(-n+2))')
-  .each(sub { push @e, shift.text });
-is-deeply \@e, ['C'], 'found third element';
-@e = ();
-$dom.find('ul :nth-child(-n+3):not(:nth-child(1)):not(:nth-child(2))')
-  .each(sub { push @e, shift.text });
-is-deeply \@e, ['C'], 'found third element';
-@e = ();
-$dom.find(':only-child').each(sub { push @e, shift.text });
-is-deeply \@e, ['J'], 'found only child';
-@e = ();
-$dom.find('div :only-of-type').each(sub { push @e, shift.text });
-is-deeply \@e, [qw(J K)], 'found only child';
-@e = ();
-$dom.find('div:only-child').each(sub { push @e, shift.text });
-is-deeply \@e, ['J'], 'found only child';
-@e = ();
-$dom.find('div div:only-of-type').each(sub { push @e, shift.text });
-is-deeply \@e, [qw(J K)], 'found only child';
+is-deeply $dom.find('ul :nth-child(odd)')».text, [qw(A C E G I)],
+    'found all odd elements';
+is-deeply $dom.find('li:nth-of-type(odd)')».text, [qw(A E H)],
+    'found all odd li elements';
+is-deeply $dom.find('li:nth-last-of-type( odd )')».text, [qw(C F I)],
+    'found all odd li elements';
+is-deeply $dom.find('p:nth-of-type(odd)')».text, [qw(B G)],
+    'found all odd p elements';
+is-deeply $dom.find('p:nth-last-of-type(odd)')».text, [qw(B G)],
+    'found all odd li elements';
+is-deeply $dom.find('ul :nth-child(1)')».text, ['A'], 'found first child';
+is-deeply $dom.find('ul :first-child')».text, ['A'], 'found first child';
+is-deeply $dom.find('p:nth-of-type(1)')».text, ['B'], 'found first child';
+is-deeply $dom.find('p:first-of-type')».text, ['B'], 'found first child';
+is-deeply $dom.find('li:nth-of-type(1)')».text, ['A'], 'found first child';
+is-deeply $dom.find('li:first-of-type')».text, ['A'], 'found first child';
+is-deeply $dom.find('ul :nth-last-child(-n+1)')».text, ['I'],
+    'found last child';
+is-deeply $dom.find('ul :last-child')».text, ['I'], 'found last child';
+is-deeply $dom.find('p:nth-last-of-type(-n+1)')».text, ['G'],
+    'found last child';
+is-deeply $dom.find('p:last-of-type')».text, ['G'], 'found last child';
+is-deeply $dom.find('li:nth-last-of-type(-n+1)')».text, ['I'],
+    'found last child';
+is-deeply $dom.find('li:last-of-type')».text, ['I'], 'found last child';
+is-deeply $dom.find('ul :nth-child(-n+3):not(li)')».text, ['B'],
+    'found first p element';
+is-deeply $dom.find('ul :nth-child(-n+3):NOT(li)')».text, ['B'],
+    'found first p element';
+is-deeply $dom.find('ul :nth-child(-n+3):not(:first-child)')».text, [qw(B C)],
+    'found second and third element';
+is-deeply $dom.find('ul :nth-child(-n+3):not(.♥)')».text, [qw(A B)],
+    'found first and second element';
+is-deeply $dom.find('ul :nth-child(-n+3):not([class$="♥"])')».text, [qw(A B)],
+    'found first and second element';
+is-deeply $dom.find('ul :nth-child(-n+3):not(li[class$="♥"])')».text, [qw(A B)],
+    'found first and second element';
+is-deeply $dom.find(
+    'ul :nth-child(-n+3):not([class$="♥"][class^="test"])')».text, [qw(A B)],
+    'found first and second element';
+is-deeply $dom.find('ul :nth-child(-n+3):not(*[class$="♥"])')».text, [qw(A B)],
+    'found first and second element';
+is-deeply $dom.find('ul :nth-child(-n+3):not(:nth-child(-n+2))')».text, ['C'],
+    'found third element';
+is-deeply $dom.find(
+    'ul :nth-child(-n+3):not(:nth-child(1)):not(:nth-child(2))')».text, ['C'],
+    'found third element';
+is-deeply $dom.find(':only-child')».text, ['J'], 'found only child';
+is-deeply $dom.find('div :only-of-type')».text, [qw(J K)], 'found only child';
+is-deeply $dom.find('div:only-child')».text, ['J'], 'found only child';
+is-deeply $dom.find('div div:only-of-type')».text, [qw(J K)],
+    'found only child';
 
 # Sibling combinator
 $dom = DOM::Parser.new(qq:to/END/);
@@ -1201,8 +1153,7 @@ is "$dom", qq:to/END/, 'right result';
 END
 is $dom.at('div').text, 'A-1', 'right text';
 is $dom.at('iv'), Nil, 'no result';
-is $dom.prepend('l').prepend('alal').prepend('a').type, 'root',
-  'right type';
+is $dom.prepend('l').prepend('alal').prepend('a').type, 'root', 'right type';
 is "$dom", qq:to/END/, 'no changes';
 <ul>
     24<div>A-1</div>25<li>A</li><p>A1</p>23
@@ -1220,7 +1171,7 @@ is "$dom", qq:to/END/, 'no changes';
 </ul>
 <div>D</div>
 END
-$dom.find('div').each(sub { shift.append('works') });
+$dom.find('div')».append('works');
 is "$dom", qq:to/END/, 'right result';
 <ul>
     24<div>A-1</div>works25<li>A</li><p>A1</p>23
@@ -1304,7 +1255,7 @@ is $dom.find('div > p')[4].text, 'E',   'right text';
 is $dom.find('div > p')[5].text, 'F G', 'right text';
 is $dom.find('div > p')[6].text, 'H',   'right text';
 is $dom.find('div > p > p')[0], Nil, 'no results';
-is $dom.at('div > p > img').attr.{src}, 'foo.png', 'right attribute';
+is $dom.at('div > p > img').attr<src>, 'foo.png', 'right attribute';
 is $dom.at('div > div').text, 'X', 'right text';
 
 # Optional "dt" and "dd" tags
@@ -1377,13 +1328,13 @@ $dom = DOM::Parser.new(qq:to/END/);
     <col id=bar>
 </table>
 END
-is $dom.find('table > col')[0].attr.{id}, 'morefail', 'right attribute';
-is $dom.find('table > col')[1].attr.{id}, 'fail',     'right attribute';
-is $dom.find('table > colgroup > col')[0].attr.{id}, 'foo',
+is $dom.find('table > col')[0].attr<id>, 'morefail', 'right attribute';
+is $dom.find('table > col')[1].attr<id>, 'fail',     'right attribute';
+is $dom.find('table > colgroup > col')[0].attr<id>, 'foo',
   'right attribute';
-is $dom.find('table > colgroup > col')[1].attr.{class}, 'foo',
+is $dom.find('table > colgroup > col')[1].attr<class>, 'foo',
   'right attribute';
-is $dom.find('table > colgroup > col')[2].attr.{id}, 'bar',
+is $dom.find('table > colgroup > col')[2].attr<id>, 'bar',
   'right attribute';
 
 # Optional "thead", "tbody", "tfoot", "tr", "th" and "td" tags
@@ -1429,18 +1380,18 @@ $dom = DOM::Parser.new(qq:to/END/);
       <td>E
 </table>
 END
-is $dom.find('table > col')[0].attr.{id}, 'morefail', 'right attribute';
-is $dom.find('table > col')[1].attr.{id}, 'fail',     'right attribute';
-is $dom.find('table > colgroup > col')[0].attr.{id}, 'foo',
+is $dom.find('table > col')[0].attr<id>, 'morefail', 'right attribute';
+is $dom.find('table > col')[1].attr<id>, 'fail',     'right attribute';
+is $dom.find('table > colgroup > col')[0].attr<id>, 'foo',
   'right attribute';
-is $dom.find('table > colgroup > col')[1].attr.{class}, 'foo',
+is $dom.find('table > colgroup > col')[1].attr<class>, 'foo',
   'right attribute';
-is $dom.find('table > colgroup > col')[2].attr.{id}, 'bar',
+is $dom.find('table > colgroup > col')[2].attr<id>, 'bar',
   'right attribute';
 is $dom.at('table > thead > tr > th').text, 'A', 'right text';
 is $dom.find('table > thead > tr > th')[1].text, 'D', 'right text';
 is $dom.at('table > tbody > tr > td').text, 'B', 'right text';
-is $dom.find('table > tbody > tr > td').map('text').join("\n"), "B\nE",
+is $dom.find('table > tbody > tr > td')».text.join("\n"), "B\nE",
   'right text';
 
 # Optional "colgroup", "tbody", "tr", "th" and "td" tags
@@ -1457,11 +1408,12 @@ $dom = DOM::Parser.new(qq:to/END/);
       <td>B
 </table>
 END
-is $dom.find('table > colgroup > col')[0].attr.{id}, 'foo',
+is $dom.find('table > colgroup > col')[2].attr<id>, 'bar',
+is $dom.find('table > colgroup > col')[0].attr<id>, 'foo',
   'right attribute';
-is $dom.find('table > colgroup > col')[1].attr.{class}, 'foo',
+is $dom.find('table > colgroup > col')[1].attr<class>, 'foo',
   'right attribute';
-is $dom.find('table > colgroup > col')[2].attr.{id}, 'bar',
+is $dom.find('table > colgroup > col')[2].attr<id>, 'bar',
   'right attribute';
 is $dom.at('table > tbody > tr > td').text, 'B', 'right text';
 
@@ -1520,11 +1472,9 @@ is $dom.find('tbody > tr > .gamma')[0].text, '',            'no text';
 is $dom.find('tbody > tr > .gamma > a')[0].text, 'Gamma',     'right text';
 is $dom.find('tbody > tr > .alpha')[1].text,     'Alpha Two', 'right text';
 is $dom.find('tbody > tr > .gamma > a')[1].text, 'Gamma Two', 'right text';
-my @following
-  = $dom.find('tr > td:nth-child(1)').map(following => ':nth-child(even)')
-  .flatten.map('all-text').each;
-is-deeply \@following, ['Beta', 'Delta', 'Beta Two', 'Delta Two'],
-  'right results';
+is-deeply $dom.find('tr > td:nth-child(1)')».following(':nth-child(even)')
+    .flat».all-text, ['Beta', 'Delta', 'Beta Two', 'Delta Two'],
+    'right results';
 
 # Real world list
 $dom = DOM::Parser.new(qq:to/END/);
@@ -1598,9 +1548,9 @@ is $dom.find('html > body')[0].text, 'Foo!', 'right text';
 is $dom.find('html > head > style')[0].text,
   "#style { foo: style('<test>'); }", 'right text';
 is $dom.find('html > head > script')[0].text,
-  "\n      if (a < b) {\n        alert('<123>');\n      }\n    ", 'right text';
+ "\n      if (a < b) \{\n        alert('<123>');\n      \}\n    ", 'right text';
 is $dom.find('html > head > script')[1].text,
-  "if (b > c) { alert('&<ohoh>') }", 'right text';
+  "if (b > c) \{ alert('&<ohoh>') \}", 'right text';
 
 # More real world JavaScript
 $dom = DOM::Parser.new(qq:to/END/);
@@ -1699,7 +1649,7 @@ is $dom.tree[3][1], ' foo [
   <!ENTITY % e SYSTEM "myentities.ent">
   %myentities;
 ]  ', 'right doctype';
-is $dom.at('foo').attr.{'xml:lang'}, 'de', 'right attribute';
+is $dom.at('foo').attr<xml:lang>, 'de', 'right attribute';
 is $dom.at('foo').text, 'Check!', 'right text';
 $dom = DOM::Parser.new(qq:to/END/);
 <!DOCTYPE TESTSUITE PUBLIC "my.dtd" 'mhhh' [
@@ -1834,7 +1784,7 @@ is $dom, qq:to/END/, 'right result';
 END
 
 # A collection of wonderful screwups
-$dom = DOM::Parser.new(<<'END');
+$dom = DOM::Parser.new(q:to/END/);
 <!DOCTYPE html>
 <html lang="en">
   <head><title>Wonderful Screwups</title></head>
@@ -1864,7 +1814,7 @@ $dom = DOM::Parser.new('<br< abc abc abc abc abc abc abc abc<p>Test</p>');
 is $dom.at('p').text, 'Test', 'right text';
 
 # Modifying an XML document
-$dom = DOM::Parser.new(<<'END');
+$dom = DOM::Parser.new(q:to/END/);
 <?xml version='1.0' encoding='UTF-8'?>
 <XMLTest />
 END
@@ -1879,7 +1829,7 @@ is $element.parent.tag, 'XMLTest', 'right parent';
 ok $element.root.xml, 'XML mode active';
 $dom.replace('<XMLTest2 /><XMLTest3 just="works" />');
 ok $dom.xml, 'XML mode active';
-$dom.at('XMLTest2').{foo} = Nil;
+$dom.at('XMLTest2')<foo> = Nil;
 is $dom, '<XMLTest2 foo="foo" /><XMLTest3 just="works" />', 'right result';
 
 # Ensure HTML semantics
@@ -1891,7 +1841,7 @@ is $dom.at('div:root').text, 'Test', 'right text';
 
 # Ensure XML semantics
 ok !!DOM::Parser.new.xml(1).parse('<foo />').xml, 'XML mode active';
-$dom = DOM::Parser.new(<<'END');
+$dom = DOM::Parser.new(q:to/END/);
 <?xml version='1.0' encoding='UTF-8'?>
 <script>
   <table>
@@ -1911,7 +1861,7 @@ is $dom.find('table > td > tr > thead')[2], Nil, 'no result';
 is $dom.find('table > td > tr > thead').elems, 2, 'right number of elements';
 
 # Ensure XML semantics again
-$dom = DOM::Parser.new.xml(1).parse(<<'END');
+$dom = DOM::Parser.new.xml(1).parse(q:to/END/);
 <table>
   <td>
     <tr><thead>foo<thead></tr>
@@ -1927,7 +1877,7 @@ is $dom.find('table > td > tr > thead')[2], Nil, 'no result';
 is $dom.find('table > td > tr > thead').elems, 2, 'right number of elements';
 
 # Nested tables
-$dom = DOM::Parser.new(<<'END');
+$dom = DOM::Parser.new(q:to/END/);
 <table id="foo">
   <tr>
     <td>
@@ -1960,22 +1910,12 @@ $dom.parse(qq:to/END/);
 </c>
 END
 my @results;
-$dom.find('b').each(
-  sub {
-    $_.find('a').each(sub { push @results, $_.text });
-  }
-);
-is-deeply \@results, [qw(bar baz yada)], 'right results';
+@results.append: .find('a')».text for $dom.find('b');
+is-deeply @results, [qw(bar baz yada)], 'right results';
+is-deeply $dom.find('a')».text, [qw(foo bar baz yada)], 'right results';
 @results = ();
-$dom.find('a').each(sub { push @results, $_.text });
-is-deeply \@results, [qw(foo bar baz yada)], 'right results';
-@results = ();
-$dom.find('b').each(
-  sub {
-    $_.find('c a').each(sub { push @results, $_.text });
-  }
-);
-is-deeply \@results, [qw(baz yada)], 'right results';
+@results.append: .find('c a')».text for $dom.find('b');
+is-deeply @results, [qw(baz yada)], 'right results';
 is $dom.at('b').at('a').text, 'bar', 'right text';
 is $dom.at('c > b > a').text, 'bar', 'right text';
 is $dom.at('b').at('c > b > a'), Nil, 'no result';
@@ -1991,25 +1931,23 @@ $dom = DOM::Parser.new.xml(1).parse(qq:to/END/);
 </a>
 END
 ok $dom.xml, 'XML mode active';
-is $dom.at('a').{id}, 'one', 'right attribute';
-is-deeply [sort keys %{$dom.at('a')}], ['id'], 'right attributes';
+is $dom.at('a')<id>, 'one', 'right attribute';
+is-deeply $dom.at('a').keys.sort, ['id'], 'right attributes';
 is $dom.at('a').at('B').text, 'foo', 'right text';
-is $dom.at('B').{class}, 'two', 'right attribute';
-is-deeply [sort keys %{$dom.at('a B')}], [qw(class test)], 'right attributes';
+is $dom.at('B')<class>, 'two', 'right attribute';
+is-deeply $dom.at('a B').keys.sort, [qw(class test)], 'right attributes';
 is $dom.find('a B c')[0].text, 'bar', 'right text';
-is $dom.find('a B c')[0]{id}, 'three', 'right attribute';
-is-deeply [sort keys %{$dom.find('a B c')[0]}], ['id'], 'right attributes';
+is $dom.find('a B c')[0]<id>, 'three', 'right attribute';
+is-deeply $dom.find('a B c')[0].keys.sort, ['id'], 'right attributes';
 is $dom.find('a B c')[1].text, 'baz', 'right text';
-is $dom.find('a B c')[1]{ID}, 'four', 'right attribute';
-is-deeply [sort keys %{$dom.find('a B c')[1]}], ['ID'], 'right attributes';
+is $dom.find('a B c')[1]<ID>, 'four', 'right attribute';
+is-deeply $dom.find('a B c')[1].keys.sort, ['ID'], 'right attributes';
 is $dom.find('a B c')[2], Nil, 'no result';
 is $dom.find('a B c').elems, 2, 'right number of elements';
-@results = ();
-$dom.find('a B c').each(sub { push @results, $_.text });
-is-deeply \@results, [qw(bar baz)], 'right results';
+is-deeply $dom.find('a B c')».text, [qw(bar baz)], 'right results';
 is $dom.find('a B c').join("\n"),
   qq{<c id="three">bar</c>\n<c ID="four">baz</c>}, 'right result';
-is-deeply [keys %$dom], [], 'root has no attributes';
+is-deeply $dom.keys, [], 'root has no attributes';
 is $dom.find('#nothing').join, '', 'no result';
 
 # Direct hash access to attributes in HTML mode
@@ -2023,25 +1961,23 @@ $dom = DOM::Parser.new(qq:to/END/);
 </a>
 END
 ok !$dom.xml, 'XML mode not active';
-is $dom.at('a').{id}, 'one', 'right attribute';
-is-deeply [sort keys %{$dom.at('a')}], ['id'], 'right attributes';
+is $dom.at('a')<id>, 'one', 'right attribute';
+is-deeply $dom.at('a').keys.sort, ['id'], 'right attributes';
 is $dom.at('a').at('b').text, 'foo', 'right text';
-is $dom.at('b').{class}, 'two', 'right attribute';
-is-deeply [sort keys %{$dom.at('a b')}], [qw(class test)], 'right attributes';
+is $dom.at('b')<class>, 'two', 'right attribute';
+is-deeply $dom.at('a b').keys.sorts, [qw(class test)], 'right attributes';
 is $dom.find('a b c')[0].text, 'bar', 'right text';
-is $dom.find('a b c')[0]{id}, 'three', 'right attribute';
-is-deeply [sort keys %{$dom.find('a b c')[0]}], ['id'], 'right attributes';
+is $dom.find('a b c')[0]<id>, 'three', 'right attribute';
+is-deeply $dom.find('a b c')[0].keys.sort, ['id'], 'right attributes';
 is $dom.find('a b c')[1].text, 'baz', 'right text';
-is $dom.find('a b c')[1]{id}, 'four', 'right attribute';
-is-deeply [sort keys %{$dom.find('a b c')[1]}], ['id'], 'right attributes';
+is $dom.find('a b c')[1]<id>, 'four', 'right attribute';
+is-deeply $dom.find('a b c')[1].keys.sort, ['id'], 'right attributes';
 is $dom.find('a b c')[2], Nil, 'no result';
 is $dom.find('a b c').elems, 2, 'right number of elements';
-@results = ();
-$dom.find('a b c').each(sub { push @results, $_.text });
-is-deeply \@results, [qw(bar baz)], 'right results';
+is-deeply $dom.find('a b c')».text, [qw(bar baz)], 'right results';
 is $dom.find('a b c').join("\n"),
   qq{<c id="three">bar</c>\n<c id="four">baz</c>}, 'right result';
-is-deeply [keys %$dom], [], 'root has no attributes';
+is-deeply $dom.keys, [], 'root has no attributes';
 is $dom.find('#nothing').join, '', 'no result';
 
 # Append and prepend content
@@ -2076,7 +2012,7 @@ is $dom.at('a').wrap_content('A').tag, 'a', 'right tag';
 is "$dom", '<a>Test</a>', 'right result';
 is $dom.wrap_content('<b></b>').type, 'root', 'right type';
 is "$dom", '<b><a>Test</a></b>', 'right result';
-is $dom.at('b').strip.at('a').tag('e:a').wrap_content('1<b c="d"></b>')
+is $dom.at('b').strip.at('a').tag('e:a').wrap-content('1<b c="d"></b>')
   .tag, 'e:a', 'right tag';
 is "$dom", '<e:a>1<b c="d">Test</b></e:a>', 'right result';
 is $dom.at('a').wrap_content('C<c><d>D</d><e>E</e></c>F').parent.type,
@@ -2093,8 +2029,8 @@ $dom = DOM::Parser.new(qq:to/END/);
   </tr>
 </table>
 END
-is $dom.find('table tr td')[0].at('div').{id}, 'A', 'right attribute';
-is $dom.find('table tr td')[1].at('div').{id}, 'B', 'right attribute';
+is $dom.find('table tr td')[0].at('div')<id>, 'A', 'right attribute';
+is $dom.find('table tr td')[1].at('div')<id>, 'B', 'right attribute';
 is $dom.find('table tr td')[2], Nil, 'no result';
 is $dom.find('table tr td').elems, 2, 'right number of elements';
 is "$dom", qq:to/END/, 'right result';
@@ -2232,15 +2168,15 @@ $dom = DOM::Parser.new(qq:to/END/);
   <head><meta http-equiv="content-type" content="text/html"></head>
 </html>
 END
-is $dom.find('[http-equiv]')[0]{content}, 'text/html', 'right attribute';
+is $dom.find('[http-equiv]')[0]<content>, 'text/html', 'right attribute';
 is $dom.find('[http-equiv]')[1], Nil, 'no result';
-is $dom.find('[http-equiv="content-type"]')[0]{content}, 'text/html',
+is $dom.find('[http-equiv="content-type"]')[0]<content>, 'text/html',
   'right attribute';
 is $dom.find('[http-equiv="content-type"]')[1], Nil, 'no result';
-is $dom.find('[http-equiv^="content-"]')[0]{content}, 'text/html',
+is $dom.find('[http-equiv^="content-"]')[0]<content>, 'text/html',
   'right attribute';
 is $dom.find('[http-equiv^="content-"]')[1], Nil, 'no result';
-is $dom.find('head > [http-equiv$="-type"]')[0]{content}, 'text/html',
+is $dom.find('head > [http-equiv$="-type"]')[0]<content>, 'text/html',
   'right attribute';
 is $dom.find('head > [http-equiv$="-type"]')[1], Nil, 'no result';
 
@@ -2304,23 +2240,23 @@ $dom = DOM::Parser.new(qq:to/END/);
 <p class="foo bAr">B</p>
 <p class="FOO">C</p>
 END
-is $dom.find('.foo').map('text').join(','),            'A,B', 'right result';
-is $dom.find('.FOO').map('text').join(','),            'C',   'right result';
-is $dom.find('[class=foo]').map('text').join(','),     'A',   'right result';
-is $dom.find('[class=foo i]').map('text').join(','),   'A,C', 'right result';
-is $dom.find('[class="foo" i]').map('text').join(','), 'A,C', 'right result';
-is $dom.find('[class="foo bar"]').elems, 0, 'no results';
-is $dom.find('[class="foo bar" i]').map('text').join(','), 'B',
+is $dom.find('.foo')».text.join(','),            'A,B', 'right result';
+is $dom.find('.FOO')».text.join(','),            'C',   'right result';
+is $dom.find('[class=foo]')».text.join(','),     'A',   'right result';
+is $dom.find('[class=foo i]')».text.join(','),   'A,C', 'right result';
+is $dom.find('[class="foo" i]')».text.join(','), 'A,C', 'right result';
+is $dom.find('[class="foo bar"]')».text, 0, 'no results';
+is $dom.find('[class="foo bar" i]')».text.join(','), 'B',
   'right result';
-is $dom.find('[class~=foo]').map('text').join(','), 'A,B', 'right result';
-is $dom.find('[class~=foo i]').map('text').join(','), 'A,B,C',
+is $dom.find('[class~=foo]')».text.join(','), 'A,B', 'right result';
+is $dom.find('[class~=foo i]')».text.join(','), 'A,B,C',
   'right result';
-is $dom.find('[class*=f]').map('text').join(','),   'A,B',   'right result';
-is $dom.find('[class*=f i]').map('text').join(','), 'A,B,C', 'right result';
-is $dom.find('[class^=F]').map('text').join(','),   'C',     'right result';
-is $dom.find('[class^=F i]').map('text').join(','), 'A,B,C', 'right result';
-is $dom.find('[class$=O]').map('text').join(','),   'C',     'right result';
-is $dom.find('[class$=O i]').map('text').join(','), 'A,C',   'right result';
+is $dom.find('[class*=f]')».text.join(','),   'A,B',   'right result';
+is $dom.find('[class*=f i]')».text.join(','), 'A,B,C', 'right result';
+is $dom.find('[class^=F]')».text.join(','),   'C',     'right result';
+is $dom.find('[class^=F i]')».text.join(','), 'A,B,C', 'right result';
+is $dom.find('[class$=O]')».text.join(','),   'C',     'right result';
+is $dom.find('[class$=O i]')».text.join(','), 'A,C',   'right result';
 
 # Nested description lists
 $dom = DOM::Parser.new(qq:to/END/);
@@ -2422,7 +2358,7 @@ is "$dom", '<p><svg><circle></circle><circle></circle></svg></p>',
 
 # "image"
 $dom = DOM::Parser.new('<image src="foo.png">test');
-is $dom.at('img').{src}, 'foo.png', 'right attribute';
+is $dom.at('img')<src>, 'foo.png', 'right attribute';
 is "$dom", '<img src="foo.png">test', 'right result';
 
 # "title"
@@ -2448,11 +2384,11 @@ is $dom.tree[5][1], ' HTML4 ',             'right comment';
 is $dom.tree[7][1], ' bad idea -- HTML4 ', 'right comment';
 
 # Huge number of attributes
-$dom = DOM::Parser.new('<div ' . ('a=b ' x 32768) . '>Test</div>');
+$dom = DOM::Parser.new('<div ' ~ ('a=b ' x 32768) ~ '>Test</div>');
 is $dom.at('div[a=b]').text, 'Test', 'right text';
 
 # Huge number of nested tags
-my $huge = ('<a>' x 100) . 'works' . ('</a>' x 100);
+my $huge = ('<a>' x 100) ~ 'works' ~ ('</a>' x 100);
 $dom = DOM::Parser.new($huge);
 is $dom.all-text, 'works', 'right text';
 is "$dom", $huge, 'right result';
