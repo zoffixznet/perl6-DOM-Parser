@@ -317,11 +317,11 @@ my $p = $dom.find: 'body > #container > div p[id]';
 is $p[0].attr('id'), 'foo', 'right id attribute';
 is $p[1], Nil, 'no second result';
 is $p.elems, 1, 'right number of elements';
-@div  = $dom.find('div')».attr: 'id';
 my @p = $dom.find('p')».attr: 'id';
-is-deeply \@p, [<foo bar>], 'found all p elements';
+is-deeply @p, [<foo bar>], 'found all p elements';
+my @div = $dom.find('div')».attr: 'id';
 my $ids = [<container header logo buttons buttons content>];
-is-deeply \@div, $ids, 'found all div elements';
+is-deeply @div, $ids, 'found all div elements';
 is-deeply [$dom.at('p').ancestors».tag],
   [<div div div body html>], 'right results';
 is-deeply [$dom.at('html').ancestors], [], 'no results';
@@ -474,7 +474,7 @@ $dom = DOM::Parser.new('<div>♥</div>');
 $dom.at('div').content('☃');
 is "$dom", '<div>☃</div>', 'right result';
 $dom = DOM::Parser.new('<div>♥</div>');
-$dom.at('div').content("\x{2603}");
+$dom.at('div').content("\x[2603]");
 is $dom.to-string, '<div>☃</div>', 'right result';
 is $dom.at('div').replace('<p>♥</p>').root, '<p>♥</p>', 'right result';
 is $dom.to-string, '<p>♥</p>', 'right result';
@@ -535,14 +535,14 @@ END
 my @data;
 for $dom.find('table tr') -> $tr {
   for $tr.children -> $td {
-    push @data, $td.tag, $td.all-text;
+    @data.append: $td.tag, $td.all-text;
   }
 }
-is $data[0], 'td',    'right tag';
-is $data[1], 'text1', 'right text';
-is $data[2], 'td',    'right tag';
-is $data[3], 'text2', 'right text';
-is $data[4], Nil,   'no tag';
+is @data[0], 'td',    'right tag';
+is @data[1], 'text1', 'right text';
+is @data[2], 'td',    'right tag';
+is @data[3], 'text2', 'right text';
+is @data[4], Nil,   'no tag';
 
 # RSS
 $dom = DOM::Parser.new(qq:to/END/);
@@ -736,7 +736,7 @@ is "$dom", $yadis, 'successful roundtrip';
 # Result and iterator order
 $dom = DOM::Parser.new('<a><b>1</b></a><b>2</b><b>3</b>');
 my @numbers = $dom.find('b')».text.kv;
-is-deeply \@numbers, [1, 1, 2, 2, 3, 3], 'right order';
+is-deeply @numbers, [1, 1, 2, 2, 3, 3], 'right order';
 
 # Attributes on multiple lines
 $dom = DOM::Parser.new("<div test=23 id='a' \n class='x' foo=bar />");
@@ -1472,8 +1472,8 @@ is $dom.find('tbody > tr > .gamma')[0].text, '',            'no text';
 is $dom.find('tbody > tr > .gamma > a')[0].text, 'Gamma',     'right text';
 is $dom.find('tbody > tr > .alpha')[1].text,     'Alpha Two', 'right text';
 is $dom.find('tbody > tr > .gamma > a')[1].text, 'Gamma Two', 'right text';
-is-deeply $dom.find('tr > td:nth-child(1)')».following(':nth-child(even)')
-    .flat».all-text, ['Beta', 'Delta', 'Beta Two', 'Delta Two'],
+is-deeply $dom.find('tr > td:nth-child(1)')».following(':nth-child(even)').flat».all-text,
+    ['Beta', 'Delta', 'Beta Two', 'Delta Two'],
     'right results';
 
 # Real world list
@@ -1935,7 +1935,7 @@ is $dom.at('a')<id>, 'one', 'right attribute';
 is-deeply $dom.at('a').keys.sort, ['id'], 'right attributes';
 is $dom.at('a').at('B').text, 'foo', 'right text';
 is $dom.at('B')<class>, 'two', 'right attribute';
-is-deeply $dom.at('a B').keys.sort, [qw(class test)], 'right attributes';
+is-deeply $dom.at('a B').keys.sort, [<class test>], 'right attributes';
 is $dom.find('a B c')[0].text, 'bar', 'right text';
 is $dom.find('a B c')[0]<id>, 'three', 'right attribute';
 is-deeply $dom.find('a B c')[0].keys.sort, ['id'], 'right attributes';
@@ -1965,7 +1965,7 @@ is $dom.at('a')<id>, 'one', 'right attribute';
 is-deeply $dom.at('a').keys.sort, ['id'], 'right attributes';
 is $dom.at('a').at('b').text, 'foo', 'right text';
 is $dom.at('b')<class>, 'two', 'right attribute';
-is-deeply $dom.at('a b').keys.sorts, [qw(class test)], 'right attributes';
+is-deeply $dom.at('a b').keys.sorts, [<class test>], 'right attributes';
 is $dom.find('a b c')[0].text, 'bar', 'right text';
 is $dom.find('a b c')[0]<id>, 'three', 'right attribute';
 is-deeply $dom.find('a b c')[0].keys.sort, ['id'], 'right attributes';
@@ -1974,7 +1974,7 @@ is $dom.find('a b c')[1]<id>, 'four', 'right attribute';
 is-deeply $dom.find('a b c')[1].keys.sort, ['id'], 'right attributes';
 is $dom.find('a b c')[2], Nil, 'no result';
 is $dom.find('a b c').elems, 2, 'right number of elements';
-is-deeply $dom.find('a b c')».text, [qw(bar baz)], 'right results';
+is-deeply $dom.find('a b c')».text, [<bar baz>], 'right results';
 is $dom.find('a b c').join("\n"),
   qq{<c id="three">bar</c>\n<c id="four">baz</c>}, 'right result';
 is-deeply $dom.keys, [], 'root has no attributes';
