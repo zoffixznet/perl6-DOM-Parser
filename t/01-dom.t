@@ -29,7 +29,7 @@ is DOM::Parser.new.append-content('<p>').at('p').append-content('0').text, '0',
     'right text';
 
 # Simple nesting with healing (tree structure)
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <foo><bar a="b&lt;c">ju<baz a23>s<bazz />t</bar>works</foo>
 END
 is $dom.tree[0], 'root', 'right type';
@@ -61,12 +61,12 @@ is $dom.tree[1][4][5][6][2], $dom.tree[1][4][5], 'right parent';
 is $dom.tree[1][5][0], 'text',  'right type';
 is $dom.tree[1][5][1], 'works', 'right text';
 is $dom.tree[1][5][2], $dom.tree[1], 'right parent';
-is "$dom", qq:to/END/, 'right result';
+is "$dom", q:to/END/, 'right result';
 <foo><bar a="b&lt;c">ju<baz a23>s<bazz></bazz>t</baz></bar>works</foo>
 END
 
 # Select based on parent
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <body>
   <div>test1</div>
   <div><div>test2</div></div>
@@ -81,7 +81,7 @@ is $dom.find('body > div > div')[1], Nil, 'no result';
 is $dom.find('body > div > div').elems, 1, 'right number of elements';
 
 # A bit of everything (basic navigation)
-$dom = DOM::Parser.new.parse(qq:to/END/);
+$dom = DOM::Parser.new.parse(q:to/END/);
 <!doctype foo>
 <foo bar="ba&lt;z">
   test
@@ -103,7 +103,7 @@ is $dom.attr('foo'), Nil, 'no attribute';
 is $dom.attr(foo => 'bar').attr('foo'), Nil, 'no attribute';
 is $dom.tree[1][0], 'doctype', 'right type';
 is $dom.tree[1][1], ' foo',    'right doctype';
-is "$dom", qq:to/END/, 'right result';
+is "$dom", q:to/END/, 'right result';
 <!DOCTYPE foo>
 <foo bar="ba&lt;z">
   test
@@ -290,7 +290,7 @@ $dom = DOM::Parser.new('<div id="id" class="class">a</div>');
 is $dom.at('div#id.class').text, 'a', 'right text';
 
 # Deep nesting (parent combinator)
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <html>
   <head>
     <title>Foo</title>
@@ -328,7 +328,7 @@ is-deeply [$dom.at('html').ancestors], [], 'no results';
 is-deeply [$dom.ancestors],             [], 'no results';
 
 # Script tag
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <script charset="utf-8">alert('lalala');</script>
 END
 is $dom.at('script').text, "alert('lalala');", 'right script content';
@@ -524,7 +524,7 @@ is "$dom", '<div>foo<p>lalala</p>bar</div>', 'right result';
 is $dom.at('p').content(''), '<p></p>', 'right result';
 
 # Mixed search and tree walk
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <table>
   <tr>
     <td>text1</td>
@@ -545,7 +545,7 @@ is @data[3], 'text2', 'right text';
 is @data[4], Nil,   'no tag';
 
 # RSS
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <?xml version="1.0" encoding="UTF-8"?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
   <channel>
@@ -590,7 +590,7 @@ ok $dom.children('rss').first.xml,  'XML mode active';
 ok $dom.at('title').ancestors.first.xml, 'XML mode active';
 
 # Namespace
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <?xml version="1.0"?>
 <bk:book xmlns='uri:default-ns'
          xmlns:bk='uri:book-ns'
@@ -819,7 +819,7 @@ is-deeply @div, [<A B>], 'found all div elements with the right ids';
 is-deeply @div, [<A C>], 'found all div elements with the right ids';
 
 # Multiple attributes
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <div foo="bar" bar="baz">A</div>
 <div foo="bar">B</div>
 <div foo="bar" bar="baz">C</div>
@@ -835,7 +835,7 @@ is $dom.at('[foo="bar"]').next.previous.text, 'A', 'right text';
 is $dom.at('[foo="bar"]').next.next.next.next, Nil, 'no next sibling';
 
 # Pseudo-classes
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <form action="/foo">
     <input type="text" name="user" value="test" />
     <input type="checkbox" checked="checked" name="groovy">
@@ -886,7 +886,7 @@ is $dom.at('p').attr<id>,                    'content', 'right attribute';
 is $dom.at('p:empty').attr<id>, 'no_content', 'right attribute';
 
 # More pseudo-classes
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <ul>
     <li>A</li>
     <li>B</li>
@@ -999,7 +999,7 @@ is $dom.find('li:nth-child(whatever)').elems, 0, 'no results';
 is $dom.find('li:whatever(whatever)').elems,  0, 'no results';
 
 # Even more pseudo-classes
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <ul>
     <li>A</li>
     <p>B</p>
@@ -1074,7 +1074,7 @@ is-deeply $dom.find('div div:only-of-type')».text, [<J K>],
     'found only child';
 
 # Sibling combinator
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <ul>
     <li>A</li>
     <p>B</p>
@@ -1125,7 +1125,7 @@ is $dom.at('#♥ + *:nth-last-child(2)').text,        'F', 'right text';
 is $dom.at('#♥ ~ *:nth-last-child(2)').text,        'F', 'right text';
 
 # Adding nodes
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <ul>
     <li>A</li>
     <p>B</p>
@@ -1134,7 +1134,7 @@ $dom = DOM::Parser.new(qq:to/END/);
 <div>D</div>
 END
 $dom.at('li').append('<p>A1</p>23');
-is "$dom", qq:to/END/, 'right result';
+is "$dom", q:to/END/, 'right result';
 <ul>
     <li>A</li><p>A1</p>23
     <p>B</p>
@@ -1143,7 +1143,7 @@ is "$dom", qq:to/END/, 'right result';
 <div>D</div>
 END
 $dom.at('li').prepend('24').prepend('<div>A-1</div>25');
-is "$dom", qq:to/END/, 'right result';
+is "$dom", q:to/END/, 'right result';
 <ul>
     24<div>A-1</div>25<li>A</li><p>A1</p>23
     <p>B</p>
@@ -1154,7 +1154,7 @@ END
 is $dom.at('div').text, 'A-1', 'right text';
 is $dom.at('iv'), Nil, 'no result';
 is $dom.prepend('l').prepend('alal').prepend('a').type, 'root', 'right type';
-is "$dom", qq:to/END/, 'no changes';
+is "$dom", q:to/END/, 'no changes';
 <ul>
     24<div>A-1</div>25<li>A</li><p>A1</p>23
     <p>B</p>
@@ -1163,7 +1163,7 @@ is "$dom", qq:to/END/, 'no changes';
 <div>D</div>
 END
 is $dom.append('lalala').type, 'root', 'right type';
-is "$dom", qq:to/END/, 'no changes';
+is "$dom", q:to/END/, 'no changes';
 <ul>
     24<div>A-1</div>25<li>A</li><p>A1</p>23
     <p>B</p>
@@ -1172,7 +1172,7 @@ is "$dom", qq:to/END/, 'no changes';
 <div>D</div>
 END
 $dom.find('div')».append('works');
-is "$dom", qq:to/END/, 'right result';
+is "$dom", q:to/END/, 'right result';
 <ul>
     24<div>A-1</div>works25<li>A</li><p>A1</p>23
     <p>B</p>
@@ -1182,7 +1182,7 @@ is "$dom", qq:to/END/, 'right result';
 END
 $dom.at('li').prepend-content('A3<p>A2</p>').prepend-content('A4');
 is $dom.at('li').text, 'A4A3 A', 'right text';
-is "$dom", qq:to/END/, 'right result';
+is "$dom", q:to/END/, 'right result';
 <ul>
     24<div>A-1</div>works25<li>A4A3<p>A2</p>A</li><p>A1</p>23
     <p>B</p>
@@ -1193,7 +1193,7 @@ END
 $dom.find('li')[1].append-content('<p>C2</p>C3').append-content(' C4')
   .append-content('C5');
 is $dom.find('li')[1].text, 'C C3 C4C5', 'right text';
-is "$dom", qq:to/END/, 'right result';
+is "$dom", q:to/END/, 'right result';
 <ul>
     24<div>A-1</div>works25<li>A4A3<p>A2</p>A</li><p>A1</p>23
     <p>B</p>
@@ -1203,7 +1203,7 @@ is "$dom", qq:to/END/, 'right result';
 END
 
 # Optional "head" and "body" tags
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <html>
   <head>
     <title>foo</title>
@@ -1213,7 +1213,7 @@ is $dom.at('html > head > title').text, 'foo', 'right text';
 is $dom.at('html > body').text,         'bar', 'right text';
 
 # Optional "li" tag
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <ul>
   <li>
     <ol>
@@ -1236,7 +1236,7 @@ is $dom.find('ul > li')[4].text,           'D', 'right text';
 is $dom.find('ul > li')[5].text,           'E', 'right text';
 
 # Optional "p" tag
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <div>
   <p>A</p>
   <P>B
@@ -1259,7 +1259,7 @@ is $dom.at('div > p > img').attr<src>, 'foo.png', 'right attribute';
 is $dom.at('div > div').text, 'X', 'right text';
 
 # Optional "dt" and "dd" tags
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <dl>
   <dt>A</dt>
   <DD>B
@@ -1277,7 +1277,7 @@ is $dom.find('dl > dt')[2].text, 'E', 'right text';
 is $dom.find('dl > dd')[2].text, 'F', 'right text';
 
 # Optional "rp" and "rt" tags
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <ruby>
   <rp>A</rp>
   <RT>B
@@ -1295,7 +1295,7 @@ is $dom.find('ruby > rp')[2].text, 'E', 'right text';
 is $dom.find('ruby > rt')[2].text, 'F', 'right text';
 
 # Optional "optgroup" and "option" tags
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <div>
   <optgroup>A
     <option id="foo">B
@@ -1317,7 +1317,7 @@ is $dom.find('div > optgroup')[2].text,          'G', 'right text';
 is $dom.find('div > optgroup > option')[4].text, 'H', 'right text';
 
 # Optional "colgroup" tag
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <table>
   <col id=morefail>
   <col id=fail>
@@ -1338,7 +1338,7 @@ is $dom.find('table > colgroup > col')[2].attr<id>, 'bar',
   'right attribute';
 
 # Optional "thead", "tbody", "tfoot", "tr", "th" and "td" tags
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <table>
   <thead>
     <tr>
@@ -1358,7 +1358,7 @@ is $dom.at('table > tbody > tr > td').text, 'B', 'right text';
 is $dom.at('table > tfoot > tr > td').text, 'C', 'right text';
 
 # Optional "colgroup", "thead", "tbody", "tr", "th" and "td" tags
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <table>
   <col id=morefail>
   <col id=fail>
@@ -1395,7 +1395,7 @@ is $dom.find('table > tbody > tr > td')».text.join("\n"), "B\nE",
   'right text';
 
 # Optional "colgroup", "tbody", "tr", "th" and "td" tags
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <table>
   <colgroup>
     <col id=foo />
@@ -1418,7 +1418,7 @@ is $dom.find('table > colgroup > col')[2].attr<id>, 'bar',
 is $dom.at('table > tbody > tr > td').text, 'B', 'right text';
 
 # Optional "tr" and "td" tags
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <table>
     <tr>
       <td>A
@@ -1436,7 +1436,7 @@ is $dom.find('table > tr > td')[2].text, 'C', 'right text';
 is $dom.find('table > tr > td')[3].text, 'D', 'right text';
 
 # Real world table
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <html>
   <head>
     <title>Real World!</title>
@@ -1477,7 +1477,7 @@ is-deeply $dom.find('tr > td:nth-child(1)')».following(':nth-child(even)').flat
     'right results';
 
 # Real world list
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <html>
   <head>
     <title>Real World!</title>
@@ -1515,7 +1515,7 @@ is $dom.find('body > ul > li')[2].all-text,     'Test 3 2 1',  'right text';
 is $dom.find('body > ul > li > p')[2].all-text, '',            'no text';
 
 # Advanced whitespace trimming (punctuation)
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <html>
   <head>
     <title>Real World!</title>
@@ -1532,7 +1532,7 @@ is $dom.find('body > div')[2].all-text, 'foo: bar baz? yada!', 'right text';
 is $dom.find('body > div')[2].text,     'foo baz!',            'right text';
 
 # Real world JavaScript and CSS
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <html>
   <head>
     <style test=works>#style { foo: style('<test>'); }</style>
@@ -1546,14 +1546,14 @@ $dom = DOM::Parser.new(qq:to/END/);
 END
 is $dom.find('html > body')[0].text, 'Foo!', 'right text';
 is $dom.find('html > head > style')[0].text,
-  "#style { foo: style('<test>'); }", 'right text';
+  q{#style { foo: style('<test>'); }}, 'right text';
 is $dom.find('html > head > script')[0].text,
  "\n      if (a < b) \{\n        alert('<123>');\n      \}\n    ", 'right text';
 is $dom.find('html > head > script')[1].text,
-  "if (b > c) \{ alert('&<ohoh>') \}", 'right text';
+  q{if (b > c) { alert('&<ohoh>') }}, 'right text';
 
 # More real world JavaScript
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <!DOCTYPE html>
 <html>
   <head>
@@ -1576,7 +1576,7 @@ is $dom.find('html > head > script')[2].text, '', 'no text';
 is $dom.at('html > body').text, 'Bar', 'right text';
 
 # Even more real world JavaScript
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <!DOCTYPE html>
 <html>
   <head>
@@ -1599,7 +1599,7 @@ is $dom.find('html > head > script')[2].text, '', 'no text';
 is $dom.at('html > body').text, 'Bar', 'right text';
 
 # Inline DTD
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <?xml version="1.0"?>
 <!-- This is a Test! -.
 <!DOCTYPE root [
@@ -1617,7 +1617,7 @@ is $dom.tree[5][1], ' root [
   <!ATTLIST root att CDATA #REQUIRED>
 ]', 'right doctype';
 is $dom.at('root').text, '<hello>world</hello>', 'right text';
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <!doctype book
 SYSTEM "usr.dtd"
 [
@@ -1632,7 +1632,7 @@ SYSTEM "usr.dtd"
 ]', 'right doctype';
 ok !$dom.xml, 'XML mode not detected';
 is $dom.at('foo'), '<foo></foo>', 'right element';
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <?xml version="1.0" encoding = 'utf-8'?>
 <!DOCTYPE foo [
   <!ELEMENT foo ANY>
@@ -1651,7 +1651,7 @@ is $dom.tree[3][1], ' foo [
 ]  ', 'right doctype';
 is $dom.at('foo').attr<xml:lang>, 'de', 'right attribute';
 is $dom.at('foo').text, 'Check!', 'right text';
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <!DOCTYPE TESTSUITE PUBLIC "my.dtd" 'mhhh' [
   <!ELEMENT foo ANY>
   <!ATTLIST foo bar ENTITY 'true'>
@@ -1674,7 +1674,7 @@ is $dom.tree[1][1], ' TESTSUITE PUBLIC "my.dtd" \'mhhh\' [
 is $dom.at('foo').attr('bar'), 'false', 'right attribute';
 
 # Broken "font" block and useless end tags
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <html>
   <head><title>Test</title></head>
   <body>
@@ -1689,7 +1689,7 @@ is $dom.at('html > head > title').text,          'Test', 'right text';
 is $dom.at('html body table tr td > font').text, 'test', 'right text';
 
 # Different broken "font" block
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <html>
   <head><title>Test</title></head>
   <body>
@@ -1709,7 +1709,7 @@ is $dom.find('html > body > font > table > tr > td')[1].text, 'test2',
   'right text';
 
 # Broken "font" and "div" blocks
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <html>
   <head><title>Test</title></head>
   <body>
@@ -1725,7 +1725,7 @@ is $dom.at('html body font > div').text,       'test1', 'right text';
 is $dom.at('html body font > div > div').text, 'test2', 'right text';
 
 # Broken "div" blocks
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <html>
   <head><title>Test</title></head>
   <body>
@@ -1741,7 +1741,7 @@ is $dom.at('html head title').text,                 'Test', 'right text';
 is $dom.at('html body div table tr td > div').text, 'test', 'right text';
 
 # And another broken "font" block
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <html>
   <head><title>Test</title></head>
   <body>
@@ -1768,7 +1768,7 @@ is $dom.find('html body table tr > td > font')[1].text, 't est3',
 is $dom.find('html body table tr > td > font')[2], Nil, 'no result';
 is $dom.find('html body table tr > td > font').elems, 2,
   'right number of elements';
-is $dom, qq:to/END/, 'right result';
+is $dom, q:to/END/, 'right result';
 <html>
   <head><title>Test</title></head>
   <body>
@@ -1895,7 +1895,7 @@ is $dom.find('table > tr > td > table > tr >td')[0].text, 'baz',
   'right text';
 
 # Nested find
-$dom.parse(qq:to/END/);
+$dom.parse(q:to/END/);
 <c>
   <a>foo</a>
   <b>
@@ -1921,7 +1921,7 @@ is $dom.at('c > b > a').text, 'bar', 'right text';
 is $dom.at('b').at('c > b > a'), Nil, 'no result';
 
 # Direct hash access to attributes in XML mode
-$dom = DOM::Parser.new.xml(1).parse(qq:to/END/);
+$dom = DOM::Parser.new.xml(1).parse(q:to/END/);
 <a id="one">
   <B class="two" test>
     foo
@@ -1951,7 +1951,7 @@ is-deeply $dom.keys, [], 'root has no attributes';
 is $dom.find('#nothing').join, '', 'no result';
 
 # Direct hash access to attributes in HTML mode
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <a id="one">
   <B class="two" test>
     foo
@@ -2021,7 +2021,7 @@ is "$dom", '<e:a>C<c><d>D1<b c="d">Test</b></d><e>E</e></c>F</e:a>',
   'right result';
 
 # Broken "div" in "td"
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <table>
   <tr>
     <td><div id="A"></td>
@@ -2033,7 +2033,7 @@ is $dom.find('table tr td')[0].at('div')<id>, 'A', 'right attribute';
 is $dom.find('table tr td')[1].at('div')<id>, 'B', 'right attribute';
 is $dom.find('table tr td')[2], Nil, 'no result';
 is $dom.find('table tr td').elems, 2, 'right number of elements';
-is "$dom", qq:to/END/, 'right result';
+is "$dom", q:to/END/, 'right result';
 <table>
   <tr>
     <td><div id="A"></div></td>
@@ -2043,7 +2043,7 @@ is "$dom", qq:to/END/, 'right result';
 END
 
 # Preformatted text
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <div>
   looks
   <pre><code>like
@@ -2075,7 +2075,7 @@ is $dom.at('div pre code').all-text(0), "like\n  it\n    really",
   'right text';
 
 # Form values
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <form action="/foo">
   <p>Test</p>
   <input type="text" name="a" value="A" />
@@ -2118,7 +2118,7 @@ is $dom.at('button').val,   'O', 'right value';
 is $dom.find('form input').last.val, 'P', 'right value';
 
 # PoCo example with whitespace sensitive text
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <?xml version="1.0" encoding="UTF-8"?>
 <response>
   <entry>
@@ -2163,7 +2163,7 @@ is $dom.find('entry')[2], Nil, 'no result';
 is $dom.find('entry').elems, 2, 'right number of elements';
 
 # Find attribute with hyphen in name and value
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <html>
   <head><meta http-equiv="content-type" content="text/html"></head>
 </html>
@@ -2181,7 +2181,7 @@ is $dom.find('head > [http-equiv$="-type"]')[0]<content>, 'text/html',
 is $dom.find('head > [http-equiv$="-type"]')[1], Nil, 'no result';
 
 # Find "0" attribute value
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <a accesskey="0">Zero</a>
 <a accesskey="1">O&gTn&gt;e</a>
 END
@@ -2211,7 +2211,7 @@ is $dom.find('a[accesskey*=1]')[1], Nil, 'no result';
 is $dom.at('a[accesskey*="."]'), Nil, 'no result';
 
 # Empty attribute value
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <foo bar=>
   test
 </foo>
@@ -2227,7 +2227,7 @@ is $dom.tree[3][0], 'tag', 'right type';
 is $dom.tree[3][1], 'bar', 'right tag';
 is $dom.tree[3][4][0], 'text',  'right type';
 is $dom.tree[3][4][1], 'after', 'right text';
-is "$dom", qq:to/END/, 'right result';
+is "$dom", q:to/END/, 'right result';
 <foo bar="">
   test
 </foo>
@@ -2235,7 +2235,7 @@ is "$dom", qq:to/END/, 'right result';
 END
 
 # Case-insensitive attribute values
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <p class="foo">A</p>
 <p class="foo bAr">B</p>
 <p class="FOO">C</p>
@@ -2259,7 +2259,7 @@ is $dom.find('[class$=O]')».text.join(','),   'C',     'right result';
 is $dom.find('[class$=O i]')».text.join(','), 'A,C',   'right result';
 
 # Nested description lists
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <dl>
   <dt>A</dt>
   <DD>
@@ -2275,7 +2275,7 @@ is $dom.find('dl > dd > dl > dd')[0].text, 'C', 'right text';
 is $dom.find('dl > dt')[0].text,           'A', 'right text';
 
 # Nested lists
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <div>
   <ul>
     <li>
@@ -2372,7 +2372,7 @@ is $dom.at('textarea#a').text, ' <p>test<', 'right text';
 is "$dom", '<textarea id="a"> <p>test<</textarea>', 'right result';
 
 # Comments
-$dom = DOM::Parser.new(qq:to/END/);
+$dom = DOM::Parser.new(q:to/END/);
 <!-- HTML5 -.
 <!-- bad idea -- HTML5 -.
 <!-- HTML4 -- >
